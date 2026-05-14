@@ -18,7 +18,7 @@ export default function GeoDIMAPDashboard() {
       {/* HEADER */}
       <header className="h-16 border-b border-zinc-800 flex items-center justify-between px-6 bg-zinc-950">
         <div>
-          <h1 className="text-2xl font-bold tracking-wide">MAPA GEODIMAP</h1>
+          <h1 className="text-2xl font-bold tracking-wide">MAPA GEODIMAP. Marcelo Cando Jácome PhD.</h1>
           <p className="text-xs text-zinc-400">
             Celica — Parque de La Madre | Cuadro de mando Territorial DInSAR
           </p>
