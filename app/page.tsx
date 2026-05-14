@@ -1,4 +1,4 @@
-"use client";
+button"use client";
 
 import { useState } from "react";
 
@@ -107,12 +107,12 @@ export default function GeoDIMAPDashboard() {
         <main className="flex-1 relative overflow-hidden">
           <Map
             initialViewState={{
-              longitude: -79.956,
-              latitude: -4.101,
-              zoom: 14,
-              pitch: 45,
-              bearing: -17,
-            }}
+  longitude: -79.95,
+  latitude: -4.10,
+  zoom: 15,
+  pitch: 60,
+  bearing: -15,
+}}
             style={{ width: "100%", height: "100%" }}
 mapStyle={{
   version: 8,
