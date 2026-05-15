@@ -52,14 +52,16 @@ export default function GeoDIMAPDashboard() {
   const [showViviendas, setShowViviendas] = useState(true);
   const [showCoronas, setShowCoronas] = useState(true);
   const [showObras, setShowObras] = useState(true);
-
+  const [showEvento, setShowEvento] = useState(false);
+  const [showPanelInfo, setShowPanelInfo] = useState(false);
+  const [showInfoTerritorial, setShowInfoTerritorial] = useState(false);
+    
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col overflow-hidden">
       <header className="h-16 bg-black border-b border-zinc-800 flex items-center justify-between px-5">
         <div>
           <h1 className="text-2xl font-bold">
-            MAPA GEODIMAP. Marcelo Cando Jácome PhD.
-          </h1>
+            MAPA GEODIMAP.           </h1>
           <p className="text-sm text-zinc-400">
             Celica — Parque de La Madre | Cuadro de mando Territorial DInSAR
           </p>
@@ -89,8 +91,8 @@ export default function GeoDIMAPDashboard() {
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="w-72 bg-black border-r border-zinc-800 overflow-y-auto p-4">
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        <aside className="hidden md:block w-72 bg-black border-r border-zinc-800 overflow-y-auto p-4">
           <h2 className="text-4xl font-bold mb-6">Capas</h2>
 
           <div className="mb-6">
@@ -189,7 +191,7 @@ export default function GeoDIMAPDashboard() {
           </div>
         </aside>
 
-        <main className="flex-1 relative">
+        <main className="flex-1 relative min-h-[60vh] md:min-h-0">
           <Map
             initialViewState={{
               longitude: -79.956,
@@ -198,7 +200,7 @@ export default function GeoDIMAPDashboard() {
               pitch: 45,
               bearing: -15,
             }}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%", minHeight: "60vh" }}
             mapStyle={baseMap === "osm" ? osmStyle : satelliteStyle}
           >
             <NavigationControl position="top-right" />
@@ -280,66 +282,79 @@ export default function GeoDIMAPDashboard() {
             )}
           </Map>
 
-          <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-md p-6 rounded-2xl w-80 border border-zinc-700">
-            <h2 className="text-3xl font-bold mb-4">Evento principal</h2>
-            <p className="text-lg text-zinc-300 leading-relaxed">
-              La anomalía DInSAR detectada en marzo de 2025 coincide con el
-              hundimiento ocurrido el 9 de abril de 2025 en el Parque de La
-              Madre, Celica.
-            </p>
-          </div>
+          
+<button
+  onClick={() => setShowEvento(!showEvento)}
+  className="absolute top-4 left-4 z-30 bg-cyan-500 text-black px-4 py-2 rounded-xl font-bold shadow-lg"
+>
+  Evento
+</button>
 
-          {activePanel === "Vista 3D" && (
-            <DynamicPanel
-              title="Vista 3D Territorial"
-              text="Modelo tridimensional del área de subsidencia."
-              color="border-cyan-500"
-            />
-          )}
+{showEvento && (
+  <div className="absolute top-16 left-4 z-30 bg-black/85 backdrop-blur-md p-4 rounded-2xl w-[250px] border border-zinc-700">
+    <button
+      onClick={() => setShowEvento(false)}
+      className="absolute top-2 right-3 text-zinc-300"
+    >
+      ✕
+    </button>
 
-          {activePanel === "DINSAR" && (
-            <DynamicPanel
-              title="Panel DInSAR"
-              text="Información de deformación, subsidencia y levantamiento relativo."
-              color="border-cyan-500"
-            />
-          )}
+    <h2 className="text-xl font-bold mb-3">Evento principal</h2>
 
-          {activePanel === "Impacto" && (
-            <DynamicPanel
-              title="Impacto Territorial"
-              text="Viviendas afectadas, infraestructura urbana y zonas críticas."
-              color="border-red-500"
-            />
-          )}
+    <p className="text-sm text-zinc-300 leading-relaxed">
+      La anomalía DInSAR detectada en marzo de 2025 coincide con el
+      hundimiento ocurrido el 9 de abril de 2025 en el Parque de La
+      Madre, Celica.
+    </p>
+  </div>
+)}
+        <button
+  onClick={() => setShowPanelInfo(!showPanelInfo)}
+  className="absolute bottom-4 left-4 z-30 bg-zinc-900 text-white px-4 py-2 rounded-xl border border-cyan-500 shadow-lg"
+>
+  Panel
+</button>
 
-          {activePanel === "Evidencias" && (
-            <DynamicPanel
-              title="Evidencias"
-              text="Fotografías, grietas, subsidencia y monitoreo de campo."
-              color="border-yellow-500"
-            />
-          )}
+{showPanelInfo && (
+  <div className="absolute bottom-20 left-4 right-4 z-30 bg-black/85 backdrop-blur-md p-4 rounded-2xl border border-cyan-500">
+    
+    <button
+      onClick={() => setShowPanelInfo(false)}
+      className="absolute top-2 right-3 text-zinc-300 text-lg"
+    >
+      ✕
+    </button>
 
-          {activePanel === "Mitigación" && (
-            <DynamicPanel
-              title="Mitigación"
-              text="Obras, drenajes, coronas y estabilización territorial."
-              color="border-green-500"
-            />
-          )}
+    <h2 className="text-xl font-bold mb-2">
+      {activePanel}
+    </h2>
 
-          {activePanel === "Cronología" && (
-            <DynamicPanel
-              title="Cronología del evento"
-              text="Evolución temporal desde 2023 hasta mayo de 2025."
-              color="border-purple-500"
-            />
-          )}
+    <p className="text-sm text-zinc-300">
+      {activePanel === "Vista 3D" &&
+        "Modelo tridimensional del área de subsidencia."}
+
+      {activePanel === "DINSAR" &&
+        "Información de deformación, subsidencia y levantamiento relativo."}
+
+      {activePanel === "Impacto" &&
+        "Viviendas afectadas, infraestructura urbana y zonas críticas."}
+
+      {activePanel === "Evidencias" &&
+        "Fotografías, grietas, subsidencia y monitoreo de campo."}
+
+      {activePanel === "Mitigación" &&
+        "Obras, drenajes, coronas y estabilización territorial."}
+
+      {activePanel === "Cronología" &&
+        "Evolución temporal desde 2023 hasta mayo de 2025."}
+    </p>
+  </div>
+)}  
+
         </main>
 
-        <aside className="w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto">
-          <h2 className="text-3xl font-bold mb-6">
+        <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto">
+          <h2 className="text-xl md:text-3xl font-bold mb-6">
             Interpretación Territorial
           </h2>
 
@@ -426,10 +441,10 @@ function DynamicPanel({
 }) {
   return (
     <div
-      className={`absolute bottom-10 left-10 bg-black/70 p-5 rounded-2xl border ${color}`}
+      className={`absolute bottom-4 left-4 right-4 md:right-auto md:bottom-10 md:left-10 bg-black/70 p-4 md:p-5 rounded-2xl border ${color} md:w-auto`}
     >
-      <h2 className="text-2xl font-bold mb-2">{title}</h2>
-      <p className="text-zinc-300">{text}</p>
+      <h2 className="text-xl md:text-2xl font-bold mb-2">{title}</h2>
+      <p className="text-sm md:text-base text-zinc-300">{text}</p>
     </div>
   );
 }
