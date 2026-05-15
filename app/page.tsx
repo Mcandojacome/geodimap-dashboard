@@ -201,7 +201,7 @@ export default function GeoDIMAPDashboard() {
               bearing: -15,
             }}
             style={{ width: "100%", height: "100%", minHeight: "60vh" }}
-            mapStyle={baseMap === "osm" ? osmStyle : satelliteStyle}
+            mapStyle={(baseMap === "osm" ? osmStyle : satelliteStyle) as any}
           >
             <NavigationControl position="top-right" />
 
