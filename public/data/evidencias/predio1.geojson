@@ -1,0 +1,9 @@
+{
+"type": "FeatureCollection",
+"name": "C:\\Users\\fabri\\geodimap-dashboard\\public\\data\\evidencias\\predio1.geojson",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "IMAGE_LINK": "C:\\echeandia\\GlobalMapper\\TMP23236\\TAR1506.tmp\\images\\Embaulado (2).jpg", "IMAGE_DIR": "304.0°", "IMAGE_DIR_SENSE": "MAG_NORTH", "ELEVATION": "1983.3619 m", "IMAGE_DIM": "1024 x 768", "ORIG_IMAGE_DIM": "5120 x 3840", "TIMESTAMP": "2024:10:25 09:50:48", "CAMERA_MAKE": "HUAWEI", "CAMERA_MODEL": "SNE-LX3", "CAMERA_ROLL": "0.0°", "CAMERA_PITCH": "-90.0°", "CAMERA_YAW": "304.0°", "FOCAL_LENGTH": "3.95 mm", "EXPOSURE_TIME": "0.000766 s", "F_NUMBER": "1.8", "EXPOSURE_PROGRAM": 2, "ISO_SPEED_RATINGS": 50, "SHUTTER_SPEED": "29.897301", "APERTURE": "1.6900001", "MAX_APERTURE": "1.6900001", "35MM_FOCAL_LENGTH": 45, "FROM_FILE": "Y" }, "geometry": { "type": "Point", "coordinates": [ -79.958981210111119, -4.103477175166666, 1983.3619384765625 ] } },
+{ "type": "Feature", "properties": { "IMAGE_LINK": "C:\\echeandia\\GlobalMapper\\TMP23236\\TAR1506.tmp\\images\\Predio  (1).jpg", "IMAGE_DIR": "135.0°", "IMAGE_DIR_SENSE": "MAG_NORTH", "ELEVATION": "1983.3619 m", "IMAGE_DIM": "1024 x 768", "ORIG_IMAGE_DIM": "5120 x 3840", "TIMESTAMP": "2024:10:25 09:50:08", "CAMERA_MAKE": "HUAWEI", "CAMERA_MODEL": "SNE-LX3", "CAMERA_ROLL": "0.0°", "CAMERA_PITCH": "-90.0°", "CAMERA_YAW": "135.0°", "FOCAL_LENGTH": "3.95 mm", "EXPOSURE_TIME": "0.001842 s", "F_NUMBER": "1.8", "EXPOSURE_PROGRAM": 2, "ISO_SPEED_RATINGS": 160, "SHUTTER_SPEED": "29.897301", "APERTURE": "1.6900001", "MAX_APERTURE": "1.6900001", "35MM_FOCAL_LENGTH": 27, "FROM_FILE": "Y" }, "geometry": { "type": "Point", "coordinates": [ -79.958981210111119, -4.103477175166666, 1983.3619384765625 ] } }
+]
+}
