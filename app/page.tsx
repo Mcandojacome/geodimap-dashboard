@@ -79,7 +79,8 @@ export default function GeoDIMAPDashboard() {
   const [selectedEvidencia, setSelectedEvidencia] = useState<any>(null);
   const [showEvidenciasCampo, setShowEvidenciasCampo] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  
+  const isMobile =
+  typeof window !== "undefined" && window.innerWidth < 768;
   
  
   const mapRef = useRef<MapRef | null>(null);
@@ -972,26 +973,30 @@ const vista3D = () => {
   </Source>
 )}
 
+
+
 {showDeformacionEstructural && (
-  <img
+    <img
     src="/legends/deforma2022_2025f_legend1.png"
     alt="Leyenda Deformación Estructural"
     style={{
       position: "absolute",
-      bottom: "150px",
-      right: "90px",
-      height: "250px",
+      bottom: isMobile ? "80px" : "150px",
+      right: isMobile ? "15px" : "90px",
+      height: isMobile ? "120px" : "250px",
       width: "auto",
-      transform: "scale(1.50)",
+      transform: isMobile ? "scale(1.0)" : "scale(1.50)",
       transformOrigin: "bottom right",
       zIndex: 1000,
       background: "rgba(255,255,255,0.92)",
       padding: "6px",
       borderRadius: "10px",
-      boxShadow: "0 0 12px rgba(0,0,0,0.45)"
+      boxShadow: "0 0 12px rgba(0,0,0,0.45)",
     }}
   />
 )}
+    
+      
 <label className="flex items-center gap-2 text-lg mb-2">
   <input
     type="checkbox"
