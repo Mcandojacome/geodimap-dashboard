@@ -1,34 +1,51 @@
-"use client";
+
+
+
 
 "use client";
 
-import { useRef, useState } from "react";
+import maplibregl from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 
+import { useState, useRef } from "react";
 import Map, {
   Source,
   Layer,
-  NavigationControl,
   Popup,
-  type MapRef,
+  NavigationControl,
+  ScaleControl,
 } from "react-map-gl/maplibre";
 
-import "maplibre-gl/dist/maplibre-gl.css";
-
-
-const osmStyle: any = {
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      maxzoom: 19,
-      tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
-    },
-  },
-  layers: [{ id: "osm", type: "raster", source: "osm" }],
+const initialViewState = {
+  longitude: -79.956,
+  latitude: -4.101,
+  zoom: 15,
+  pitch: 45,
+  bearing: -20,
 };
 
+const mapStyle: any = {
+  version: 8,
+  sources: {
+    carto: {
+      type: "raster",
+      tiles: [
+        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+      ],
+      tileSize: 256,
+      attribution: "© OpenStreetMap © CARTO",
+    },
+  },
+  layers: [
+    {
+      id: "carto-base",
+      type: "raster",
+      source: "carto",
+    },
+  ],
+};
 const satelliteStyle: any = {
   version: 8,
   sources: {
@@ -77,7 +94,7 @@ export default function GeoDIMAPDashboard() {
   const [showLaMadre, setShowLaMadre] = useState(true);
   const [globalOpacity, setGlobalOpacity] = useState(1);
   const [selectedEvidencia, setSelectedEvidencia] = useState<any>(null);
-  const [showEvidenciasCampo, setShowEvidenciasCampo] = useState(true);
+  const [showEvidenciasCampo, setShowEvidenciasCampo] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const isMobile =
   typeof window !== "undefined" && window.innerWidth < 768;
@@ -273,6 +290,17 @@ const vista3D = () => {
   />
   Curvatura Plana
 </label>
+<h3 className="text-cyan-400 font-bold mt-6 mb-3">EVIDENCIAS</h3>
+
+<label className="flex items-center gap-2 text-lg">
+  <input
+    type="checkbox"
+    checked={showEvidenciasCampo}
+    onChange={() => setShowEvidenciasCampo(!showEvidenciasCampo)}
+  />
+  Evidencias de campo
+</label>
+
 
 {/* ========================= */}
 {/* INFRAESTRUCTURA Y DEFORMACIÓN */}
@@ -411,25 +439,14 @@ const vista3D = () => {
           
         </aside>
 
-        <main className="flex-1 relative min-h-[70vh]">
+        <main className="relative flex-1 h-[calc(100vh-180px)] overflow-hidden">
          
-         
-                  
-  <Map
-
-
-  initialViewState={{
-    longitude: -79.956,
-    latitude: -4.101,
-    zoom: 15,
-    pitch: 45,
-    bearing: -15,
-  }}
+<Map
+  mapLib={maplibregl}
+  mapStyle={mapStyle}
+  initialViewState={initialViewState}
   style={{ width: "100%", height: "100%" }}
-  mapStyle={(baseMap === "osm" ? osmStyle : satelliteStyle) as any}
-
   interactiveLayerIds={["evidencias-rosario-layer"]}
-
   onClick={(e) => {
     const feature = e.features?.[0];
 
@@ -492,18 +509,21 @@ const vista3D = () => {
 )}
 {showOrtofoto && (
   <Source
-  id="ortofoto"
-  type="raster"
-  tiles={["/Tiles/{z}/{x}/{y}.jpg"]}
-  tileSize={256}
-  minzoom={0}
-  maxzoom={20}
->
+    id="ortofoto"
+    type="image"
+    url="/imagenes/ortorec.png"
+    coordinates={[
+      [-79.994373165, -4.090647310],
+      [-79.911038619, -4.090647310],
+      [-79.911038619, -4.121937922],
+      [-79.994373165, -4.121937922],
+    ]}
+  >
     <Layer
       id="ortofoto-layer"
       type="raster"
       paint={{
-        "raster-opacity": 1.0,
+        "raster-opacity": 1.0 * globalOpacity,
         "raster-fade-duration": 0,
       }}
     />
@@ -555,7 +575,7 @@ const vista3D = () => {
     />
   </Source>
 )}
-{showTWI && (
+{showTWI && !isMobile &&(
   <img
     src="/legends/celica_twi_legend.png"
     alt="Leyenda TWI"
@@ -595,7 +615,7 @@ const vista3D = () => {
     />
   </Source>
 )}
-{showLS && (
+{showLS && !isMobile &&(
   <img
     src="/legends/ls_legend.png"
     alt="Leyenda LS"
@@ -635,7 +655,7 @@ const vista3D = () => {
     />
   </Source>
 )}
-{showFlujoErosion && (
+{showFlujoErosion && !isMobile &&(
   <img
     src="/legends/flujo_erosion_legend.png"
     alt="Leyenda Flujo-Erosión"
@@ -697,7 +717,7 @@ const vista3D = () => {
   Curvatura de Perfil
 </label>
 
-{showCurvaturadePerfil && (
+{showCurvaturadePerfil && !isMobile &&(
   <img
     src="/legends/perfil_curv_legend.png"
     alt="Leyenda Curvatura de Perfil"
@@ -750,7 +770,7 @@ const vista3D = () => {
     />
   </Source>
 )}
-{showCurvaturaPlana && (
+{showCurvaturaPlana && !isMobile &&(
   <img
     src="/legends/curvatura_plana_legend.png"
     alt="Leyenda Curvatura Plana"
@@ -805,7 +825,7 @@ const vista3D = () => {
     />
   </Source>
 )}
-{showIndiceConvergencia && (
+{showIndiceConvergencia && !isMobile && (
   <img
     src="/legends/indice_convergencia_legend.png"
     alt="Leyenda Índice de Convergencia"
@@ -918,7 +938,7 @@ const vista3D = () => {
     style={{ width: "100%" }}
   />
 </div>
-{showDefor20222025 && (
+{showDefor20222025 && !isMobile &&(
   <img
     src="/legends/deforma2022_2025f_legend1.png"
     alt="Leyenda Deformación del Relieve"
@@ -975,7 +995,7 @@ const vista3D = () => {
 
 
 
-{showDeformacionEstructural && (
+{showDeformacionEstructural && !isMobile &&(
     <img
     src="/legends/deforma2022_2025f_legend1.png"
     alt="Leyenda Deformación Estructural"
@@ -1151,6 +1171,7 @@ const vista3D = () => {
         .filter((key) => key.startsWith("IMAGE_LINK"))
         .map((key, i) => {
           const foto =  "/fotos/rosario/" +  String(selectedEvidencia.properties[key]).replace(/\\/g, "/");
+          console.log("FOTO:", foto);
 
           return (
             <img
@@ -1171,7 +1192,7 @@ const vista3D = () => {
   </Popup>
 )}
 
- </Map>
+
           <button
             onClick={() => setShowEvento(!showEvento)}
             className="absolute top-4 left-4 z-30 bg-cyan-500 text-black px-4 py-2 rounded-xl font-bold shadow-lg"
@@ -1216,22 +1237,27 @@ const vista3D = () => {
               <h2 className="text-xl font-bold mb-2">{activePanel}</h2>
 
               <p className="text-sm text-zinc-300">
-                {activePanel === "Vista 3D" &&
-                  "Modelo tridimensional del área de subsidencia."}
-                {activePanel === "DINSAR" &&
-                  "Información de deformación, subsidencia y levantamiento relativo."}
-                {activePanel === "Impacto" &&
-                  "Viviendas afectadas, infraestructura urbana y zonas críticas."}
-                {activePanel === "Evidencias" &&
-                  "Fotografías, grietas, subsidencia y monitoreo de campo."}
-                {activePanel === "Mitigación" &&
-                  "Obras, drenajes, coronas y estabilización territorial."}
-                {activePanel === "Cronología" &&
-                  "Evolución temporal desde 2023 hasta mayo de 2025."}
-              </p>
+  {activePanel === "Vista 3D" &&
+    "Modelo tridimensional del área de subsidencia."}
+  {activePanel === "DINSAR" &&
+    "Información de deformación, subsidencia y levantamiento relativo."}
+  {activePanel === "Impacto" &&
+    "Viviendas afectadas, infraestructura urbana y zonas críticas."}
+  {activePanel === "Evidencias" &&
+    "Fotografías, grietas, subsidencia y monitoreo de campo."}
+  {activePanel === "Mitigación" &&
+    "Obras, drenajes, coronas y estabilización territorial."}
+  {activePanel === "Cronología" &&
+    "Evolución temporal desde 2023 hasta mayo de 2025."}
+</p>
             </div>
           )}
-        </main>
+               </Map>
+
+                     </main>
+  
+   <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto"></aside>
+
 
         <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto">
           <h2 className="text-3xl font-bold mb-6">Interpretación Territorial</h2>
