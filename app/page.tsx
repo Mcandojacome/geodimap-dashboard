@@ -14,8 +14,8 @@ import Map, {
   Popup,
   NavigationControl,
   ScaleControl,
+  type MapRef,
 } from "react-map-gl/maplibre";
-
 const initialViewState = {
   longitude: -79.956,
   latitude: -4.101,
@@ -1171,7 +1171,7 @@ const vista3D = () => {
         .filter((key) => key.startsWith("IMAGE_LINK"))
         .map((key, i) => {
           const foto =  "/fotos/rosario/" +  String(selectedEvidencia.properties[key]).replace(/\\/g, "/");
-          console.log("FOTO:", foto);
+          
 
           return (
             <img
