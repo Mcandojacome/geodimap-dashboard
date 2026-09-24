@@ -29,13 +29,12 @@ const mapStyle: any = {
   sources: {
     carto: {
       type: "raster",
-      tiles: [
-        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-      ],
+      
+        tiles: [
+    "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key=" + process.env.NEXT_PUBLIC_CARTO_API_KEY,
+  ],
       tileSize: 256,
-      attribution: "© OpenStreetMap © CARTO",
+      attribution: "© OpenStreetMap contributors, © CARTO",
     },
   },
   layers: [
@@ -46,21 +45,53 @@ const mapStyle: any = {
     },
   ],
 };
+
+const osmStyle: any = {
+  version: 8,
+  sources: {
+    osm: {
+      type: "raster",
+      tiles: [
+        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      ],
+      tileSize: 256,
+      attribution: "© OpenStreetMap contributors",
+    },
+  },
+  layers: [
+    {
+      id: "osm-layer",
+      type: "raster",
+      source: "osm",
+    },
+  ],
+};
+
 const satelliteStyle: any = {
   version: 8,
   sources: {
     esri: {
       type: "raster",
       tiles: [
-        "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       ],
       tileSize: 256,
       attribution: "Tiles © Esri",
     },
   },
-  layers: [{ id: "esri-satellite", type: "raster", source: "esri" }],
+  layers: [
+    {
+      id: "esri-satellite",
+      type: "raster",
+      source: "esri",
+      paint: {
+        "raster-opacity": 1,
+      },
+    },
+  ],
 };
-
 export default function GeoDIMAPDashboard() {
   const [globalRasterOpacity, setGlobalRasterOpacity] = useState(55);
   const [activePanel, setActivePanel] = useState("Vista 3D");
@@ -95,14 +126,20 @@ export default function GeoDIMAPDashboard() {
   const [globalOpacity, setGlobalOpacity] = useState(1);
   const [selectedEvidencia, setSelectedEvidencia] = useState<any>(null);
   const [showEvidenciasCampo, setShowEvidenciasCampo] = useState(false);
+  const [showMobilePanel, setShowMobilePanel] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const isMobile =
-  typeof window !== "undefined" && window.innerWidth < 768;
+  const isMobile =  typeof window !== "undefined" && window.innerWidth < 768;
+  const mapStyle = baseMap === "satellite" ? satelliteStyle : osmStyle;
+  const [showSubsidencia, setShowSubsidencia] = useState(true);
+  const [showLevantamiento, setShowLevantamiento] = useState(true);
+  const [showPerfiles, setShowPerfiles] = useState(true);
+  const [showPlacasRotura, setShowPlacasRotura] = useState(true);
   
  
   const mapRef = useRef<MapRef | null>(null);
 
 const vista2D = () => {
+  
   mapRef.current?.getMap().easeTo({
     pitch: 0,
     bearing: 0,
@@ -117,8 +154,7 @@ const vista3D = () => {
     duration: 1200,
   });
 };
-  
-   
+     
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col overflow-hidden">
       <header className="h-16 bg-black border-b border-zinc-800 flex items-center justify-between px-5">
@@ -134,14 +170,15 @@ const vista3D = () => {
         <div className="flex gap-3 text-sm overflow-x-auto">
           {["Vista 3D", "DINSAR", "Impacto", "Evidencias", "Mitigación", "Cronología"].map(
             (item) => (
-              <button
+                            <button
                 key={item}
                 onClick={() => setActivePanel(item)}
                 className={`px-4 py-2 rounded-xl transition-all ${
                   activePanel === item
                     ? "bg-cyan-500 text-black"
                     : "bg-zinc-800 text-white hover:bg-zinc-700"
-                }`}
+                                    }`}
+                                    
               >
                 {item}
               </button>
@@ -151,8 +188,17 @@ const vista3D = () => {
       </header>
 
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <aside className="hidden md:block w-72 bg-black border-r border-zinc-800 overflow-y-auto p-4">
-          <h2 className="text-4xl font-bold mb-6">Capas</h2>
+       <aside
+  className={`
+    fixed md:static
+    left-0 top-[96px] bottom-[90px]
+    w-72
+    bg-black border-r border-zinc-800 overflow-y-auto p-4
+    z-50
+    ${showMobilePanel ? "block" : "hidden md:block"}
+  `}
+>
+        <h2 className="text-4xl font-bold mb-6">Capas</h2>
 
           <div className="mb-6">
             <h3 className="text-cyan-400 font-bold mb-2">MAPA BASE</h3>
@@ -231,8 +277,6 @@ const vista3D = () => {
   Drenajes
 
 </label>
-
-
 
           <div className="mb-6">
   <h3 className="text-cyan-400 font-bold mb-2">HIDROGEOMORFOLOGÍA</h3>
@@ -439,9 +483,18 @@ const vista3D = () => {
           
         </aside>
 
-        <main className="relative flex-1 h-[calc(100vh-180px)] overflow-hidden">
+        <main className="relative flex-1 h-[calc(100vh-170px)] overflow-hidden z-0">
+
+
+    <button
+  onClick={() => setShowMobilePanel(!showMobilePanel)}
+  className="md:hidden absolute top-4 left-4 z-50 bg-cyan-500 text-black px-4 py-2 rounded-xl font-bold shadow-lg"
+>
+  Capas
+</button>      
          
 <Map
+  
   mapLib={maplibregl}
   mapStyle={mapStyle}
   initialViewState={initialViewState}
@@ -1256,10 +1309,11 @@ const vista3D = () => {
 
                      </main>
   
-   <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto"></aside>
+   {/*
+<aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto"></aside>
+*/}
 
-
-        <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto">
+        <aside className="w-80 bg-black border-r border-zinc-800 p-4 overflow-y-auto z-50">
           <h2 className="text-3xl font-bold mb-6">Interpretación Territorial</h2>
 
           <InfoCard
