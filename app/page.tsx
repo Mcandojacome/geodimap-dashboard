@@ -483,7 +483,7 @@ const vista3D = () => {
           
         </aside>
 
-        <main className="relative flex-1 h-[calc(100vh-170px)] overflow-hidden z-0">
+        <main className="relative w-full h-[calc(100vh-170px)] min-h-[500px] md:flex-1 md:min-h-0 overflow-hidden z-0">
 
 
     <button
@@ -495,6 +495,12 @@ const vista3D = () => {
          
 <Map
   
+  ref={mapRef}
+  onLoad={() => {
+    setTimeout(() => {
+      mapRef.current?.getMap().resize();
+    }, 300);
+  }}
   mapLib={maplibregl}
   mapStyle={mapStyle}
   initialViewState={initialViewState}
@@ -564,7 +570,7 @@ const vista3D = () => {
   <Source
     id="ortofoto"
     type="image"
-    url="/imagenes/ortorec.png"
+    url="/imagenes/ortorec_web.png"
     coordinates={[
       [-79.994373165, -4.090647310],
       [-79.911038619, -4.090647310],
@@ -1313,7 +1319,7 @@ const vista3D = () => {
 <aside className="hidden lg:block w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto"></aside>
 */}
 
-        <aside className="w-80 bg-black border-r border-zinc-800 p-4 overflow-y-auto z-50">
+        <aside className="hidden md:block md:w-80 bg-black border-l border-zinc-800 p-4 overflow-y-auto z-50">
           <h2 className="text-3xl font-bold mb-6">Interpretación Territorial</h2>
 
           <InfoCard
@@ -1401,3 +1407,7 @@ function InfoCard({
     </div>
   );
 }
+
+
+
+
