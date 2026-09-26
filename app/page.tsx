@@ -118,8 +118,6 @@ export default function GeoDIMAPDashboard() {
   const [showDrenajes, setShowDrenajes] = useState(true);
   const [showDefor20222025, setShowDefor20222025] = useState(true);
   const [dinsarOpacity, setDinsarOpacity] = useState(2);
-  const [showDeformacionEstructural, setShowDeformacionEstructural] = useState(true);
-  const [opacityDeformacionEstructural, setOpacityDeformacionEstructural] = useState(0.75);
   const [showFracturas, setShowFracturas] = useState(true);
   const [opacityFracturas, setOpacityFracturas] = useState(100);
   const [showLaMadre, setShowLaMadre] = useState(true);
@@ -356,16 +354,6 @@ const vista3D = () => {
   </h3>
   <div className="space-y-2 text-lg">
 
-    <label className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        checked={showDeformacionEstructural}
-        onChange={(e) =>
-          setShowDeformacionEstructural(e.target.checked)
-        }
-      />
-      Deformación Estructural
-    </label>
 <label className="flex items-center gap-2">
   <input
     type="checkbox"
@@ -1018,74 +1006,12 @@ const vista3D = () => {
   />
 )}
 
-<label className="flex items-center gap-2 text-lg mb-2">
-  <input
-    type="checkbox"
-    checked={showDefor20222025}
-    onChange={() =>
-      setShowDeformacionEstructural(!showDefor20222025)
-    }
-  />
-  Deformacion del Relieve
-</label>
-
-{showDeformacionEstructural && (
-  <Source
-    id="deformacion-estructural"
-    type="image"
-    url="/dinsar/deforestruc11.png"
-    coordinates={[
-      [-79.978547000, -4.092336900],
-      [-79.930203500, -4.092336900],
-      [-79.930203500, -4.117275900],
-      [-79.978547000, -4.117275900],
-    ]}
-  >
-    <Layer
-      id="deformacion-estructural-layer"
-      type="raster"
-      paint={{
-       "raster-opacity": globalOpacity,
-      "raster-fade-duration": 0,
-      }}
-    />
-  </Source>
-)}
 
 
 
-{showDeformacionEstructural && !isMobile &&(
-    <img
-    src="/legends/deforma2022_2025f_legend1.png"
-    alt="Leyenda Deformación Estructural"
-    style={{
-      position: "absolute",
-      bottom: isMobile ? "80px" : "150px",
-      right: isMobile ? "15px" : "90px",
-      height: isMobile ? "120px" : "250px",
-      width: "auto",
-      transform: isMobile ? "scale(1.0)" : "scale(1.50)",
-      transformOrigin: "bottom right",
-      zIndex: 1000,
-      background: "rgba(255,255,255,0.92)",
-      padding: "6px",
-      borderRadius: "10px",
-      boxShadow: "0 0 12px rgba(0,0,0,0.45)",
-    }}
-  />
-)}
+
     
       
-<label className="flex items-center gap-2 text-lg mb-2">
-  <input
-    type="checkbox"
-    checked={showDeformacionEstructural}
-    onChange={() =>
-      setShowDeformacionEstructural(!showDeformacionEstructural)
-    }
-  />
-  Deformacion Estructural
-</label>
 
             {showViviendas && (
               <Source id="viviendas" type="geojson" data="/data/viviendas.geojson">
@@ -1137,32 +1063,6 @@ const vista3D = () => {
               </Source>
             )}
 
-/* =============================== */
-/* DEFORMACIÓN ESTRUCTURAL DInSAR  */
-/* =============================== */
-
-{showDeformacionEstructural && (
-  <Source
-    id="deformacion-estructural"
-    type="image"
-    url="/dinsar/defestru6.png"
-    coordinates={[
-      [-79.964207948, -4.096092468],
-      [-79.944587948, -4.096092468],
-      [-79.944587948, -4.118889468],
-      [-79.964207948, -4.118889468],
-    ]}
-  >
-    <Layer
-      id="defor-construct-layer"
-      type="raster"
-      paint={{
-        "raster-opacity": 1,
-        "raster-fade-duration": 0,
-      }}
-    />
-  </Source>
-)}
 
 {showFracturas && (
   <Source
@@ -1407,6 +1307,20 @@ function InfoCard({
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
